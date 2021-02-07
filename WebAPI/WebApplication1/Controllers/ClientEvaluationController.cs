@@ -112,5 +112,10 @@ namespace WebApplication1.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, new { error = e.Message });
             }
         }
+
+        static public string teste()
+        {
+            return "Deu";
+        }
     }
 }

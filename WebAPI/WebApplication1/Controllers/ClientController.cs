@@ -17,14 +17,13 @@ namespace WebApplication1.Controllers
     {
         public HttpResponseMessage Get()
         {
-            string query = "SELECT c.*, MAX(e.EvaluationReferenceDate) as LastEvaluationReferenceDate " +
-                "FROM Evaluation as e " +
-                "INNER JOIN ClientEvaluation as ce " +
-                    "ON e.EvaluationId = ce.EvaluationId " +
-                "INNER JOIN Client as c " +
-                    "ON c.ClientId = ce.ClientId " +
-                    "GROUP BY ce.ClientId, c.ClientId, c.ClientCompanyName, c.ClientContactName, " +
-                            "c.ClientCNPJ, c.JoiningDate, c.LastEvaluationCategory";
+            string query = "SELECT *, " +
+                    "(SELECT MAX(e.EvaluationReferenceDate) " +
+                    "FROM Evaluation as e " +
+                    "INNER JOIN ClientEvaluation as ce " +
+                        "ON e.EvaluationId = ce.EvaluationId " +
+                    "WHERE Client.ClientId = ce.ClientId) as LastEvaluationReferenceDate " +
+                "FROM Client";
 
             DataTable table = new DataTable();
             using(var con = new SqlConnection(ConfigurationManager.
@@ -130,15 +129,14 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                string query = "SELECT c.*, MAX(e.EvaluationReferenceDate) as LastEvaluationReferenceDate " +
+                string query = "SELECT *, " +
+                    "(SELECT MAX(e.EvaluationReferenceDate) " +
                     "FROM Evaluation as e " +
                     "INNER JOIN ClientEvaluation as ce " +
                         "ON e.EvaluationId = ce.EvaluationId " +
-                    "INNER JOIN Client as c " +
-                        "ON c.ClientId = ce.ClientId " +
-                        $"WHERE c.ClientCompanyName = '{searchRequest.ClientCompanyName}' " +
-                        "GROUP BY ce.ClientId, c.ClientId, c.ClientCompanyName, c.ClientContactName, " +
-                                "c.ClientCNPJ, c.JoiningDate, c.LastEvaluationCategory";
+                    "WHERE Client.ClientId = ce.ClientId) as LastEvaluationReferenceDate " +
+                "FROM Client " +
+                $"WHERE Client.ClientCompanyName = '{searchRequest.ClientCompanyName}'";
 
                 DataTable table = new DataTable();
                 using (var con = new SqlConnection(ConfigurationManager.

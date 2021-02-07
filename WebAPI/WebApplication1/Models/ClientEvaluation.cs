@@ -9,6 +9,9 @@ namespace WebApplication1.Models
     public class ClientEvaluation
     {
         [Required]
+        public int ClientId { get; set; }
+
+        [Required]
         public int Grade { get; set; }
 
         [Required]
