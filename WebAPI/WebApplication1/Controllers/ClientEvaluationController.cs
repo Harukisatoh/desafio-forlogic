@@ -36,7 +36,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                string query = $"INSERT INTO dbo.ClientEvaluation " +
+                string firstQuery = $"INSERT INTO dbo.ClientEvaluation " +
                     $"VALUES({clientId}, " +
                         $"{evaluationId}, " +
                         $"{clientEvaluation.Grade}, " +
@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
                 DataTable table = new DataTable();
                 using (var con = new SqlConnection(ConfigurationManager.
                     ConnectionStrings["DesafioForLogicAppDB"].ConnectionString))
-                using (var cmd = new SqlCommand(query, con))
+                using (var cmd = new SqlCommand(firstQuery, con))
                 using (var da = new SqlDataAdapter(cmd))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -113,9 +113,23 @@ namespace WebApplication1.Controllers
             }
         }
 
-        static public string teste()
+        [Route("api/ClientEvaluation/{evaluationId}")]
+        public HttpResponseMessage GetEvaluationsFromId(int evaluationId)
         {
-            return "Deu";
+            string storedProcedure = "GetClientEvaluationsFromEvaluationId";
+
+            DataTable table = new DataTable();
+            using (var con = new SqlConnection(ConfigurationManager.
+                ConnectionStrings["DesafioForLogicAppDB"].ConnectionString))
+            using (var cmd = new SqlCommand(storedProcedure, con))
+            using (var da = new SqlDataAdapter(cmd))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@EvaluationId", SqlDbType.Int)).Value = evaluationId;
+                da.Fill(table);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, table);
         }
     }
 }

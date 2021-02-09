@@ -17,21 +17,15 @@ namespace WebApplication1.Controllers
     {
         public HttpResponseMessage Get()
         {
-            string query = "SELECT *, " +
-                    "(SELECT MAX(e.EvaluationReferenceDate) " +
-                    "FROM Evaluation as e " +
-                    "INNER JOIN ClientEvaluation as ce " +
-                        "ON e.EvaluationId = ce.EvaluationId " +
-                    "WHERE Client.ClientId = ce.ClientId) as LastEvaluationReferenceDate " +
-                "FROM Client";
+            string storedProcedure = "GetClients";
 
             DataTable table = new DataTable();
             using(var con = new SqlConnection(ConfigurationManager.
                 ConnectionStrings["DesafioForLogicAppDB"].ConnectionString))
-                using(var cmd = new SqlCommand(query, con))
+                using(var cmd = new SqlCommand(storedProcedure, con))
             using(var da = new SqlDataAdapter(cmd))
             {
-                cmd.CommandType = CommandType.Text;
+                cmd.CommandType = CommandType.StoredProcedure;
                 da.Fill(table);
             }
 
@@ -42,19 +36,18 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                string query = $"INSERT INTO dbo.Client" +
-                    $"(ClientCompanyName, ClientContactName, ClientCNPJ) VALUES (" +
-                    $"'{client.ClientCompanyName}'," +
-                    $"'{client.ClientContactName}'," +
-                    $"'{client.ClientCNPJ}')";
+                string storedProcedure = "CreateClient";
 
                 DataTable table = new DataTable();
                 using (var con = new SqlConnection(ConfigurationManager.
                     ConnectionStrings["DesafioForLogicAppDB"].ConnectionString))
-                using (var cmd = new SqlCommand(query, con))
+                using (var cmd = new SqlCommand(storedProcedure, con))
                 using (var da = new SqlDataAdapter(cmd))
                 {
-                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@ClientCompanyName", SqlDbType.VarChar)).Value = client.ClientCompanyName;
+                    cmd.Parameters.Add(new SqlParameter("@ClientContactName", SqlDbType.VarChar)).Value = client.ClientContactName;
+                    cmd.Parameters.Add(new SqlParameter("@ClientCNPJ", SqlDbType.VarChar)).Value = client.ClientCNPJ;
                     da.Fill(table);
                 }
 
