@@ -71,7 +71,7 @@ export default function EvaluationResult() {
     return(
         <>
             <Navbar />
-            <Jumbotron style={{ height: '100vh' }}>
+            <Jumbotron style={{ height: '100%' }}>
                 <h1>Resultado da avaliação da data de {formatDate(evaluation.EvaluationReferenceDate)}</h1>
 
                 <Table striped bordered hover>

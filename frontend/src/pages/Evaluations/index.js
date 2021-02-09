@@ -34,7 +34,7 @@ export default function Evaluations() {
     return (
         <>
             <Navbar />
-            <Jumbotron>
+            <Jumbotron style={{ height: '100%' }}>
                 <div style={{ display: 'flex' }}>
                     <h1 style={{ flex: 1 }}>Avaliações</h1>
 

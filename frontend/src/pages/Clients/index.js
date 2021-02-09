@@ -50,7 +50,7 @@ export default function Clients() {
     return (
         <>
             <Navbar />
-            <Jumbotron style={{ height: '100vh' }}>
+            <Jumbotron style={{ height: '100%' }}>
                 <h1>Cadastro de cliente</h1>
                 <Form autoComplete="off" onSubmit={formSubmit}>
                     <Form.Group controlId="formClientCompanyName">
