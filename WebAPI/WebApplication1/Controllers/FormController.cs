@@ -26,10 +26,12 @@ namespace WebApplication1.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("@EvaluationReferenceDate", SqlDbType.VarChar)).Value = evaluationReferenceDate;
+
+                    
                     da.Fill(table);
 
-                    var evaluationId = table.Rows[0]["Column1"];
-
+                    var evaluationId = Convert.ToInt32(table.Rows[0]["Column1"]);
+                    
                     for(int i = 0; i < form.ClientEvaluations.Length; i++)
                     {
                         string evaluationCategory;
@@ -48,6 +50,7 @@ namespace WebApplication1.Controllers
 
                         cmd.CommandText = secondStoredProcedure;
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Clear();
                         cmd.Parameters.Add(new SqlParameter("@ClientId", SqlDbType.Int)).Value = form.ClientEvaluations[i].ClientId;
                         cmd.Parameters.Add(new SqlParameter("@EvaluationId", SqlDbType.Int)).Value = evaluationId;
                         cmd.Parameters.Add(new SqlParameter("@Grade", SqlDbType.Int)).Value = form.ClientEvaluations[i].Grade;
@@ -57,7 +60,7 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Evaluation created succesfully" });
+                    return Request.CreateResponse(HttpStatusCode.OK, new { message = "Evaluation created successfully" });
                 }
 
             } catch (Exception e)

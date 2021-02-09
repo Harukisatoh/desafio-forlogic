@@ -47,7 +47,15 @@ namespace WebApplication1.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("@ClientCompanyName", SqlDbType.VarChar)).Value = client.ClientCompanyName;
                     cmd.Parameters.Add(new SqlParameter("@ClientContactName", SqlDbType.VarChar)).Value = client.ClientContactName;
-                    cmd.Parameters.Add(new SqlParameter("@ClientCNPJ", SqlDbType.VarChar)).Value = client.ClientCNPJ;
+                    
+                    if(client.ClientCNPJ == "")
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@ClientCNPJ", SqlDbType.VarChar)).Value = DBNull.Value;
+                    } else
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@ClientCNPJ", SqlDbType.VarChar)).Value = client.ClientCNPJ;
+                    }
+                    
                     da.Fill(table);
                 }
 
